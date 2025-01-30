@@ -8,7 +8,7 @@ const axios = require("axios");
 
 
 const app = express();
-const port = process.env.PORT || 3200;
+const port = process.env.PORT || 3400;
 
 
 app.use(express.json());
@@ -50,6 +50,7 @@ const Flashcard = mongoose.model("flashcards", flashcardSchema);
 
 const quizHistorySchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "users", required: true },
+  username:{ type:String ,required:true},
   score: { type: Number, required: true },
   totalQuestions: { type: Number, required: true },
   date: { type: Date, default: Date.now },
@@ -137,11 +138,16 @@ app.post("/api/flashcards", async (req, res) => {
 
 
 
-
 app.post("/api/quiz-history", authorize, async (req, res) => {
   const { score, totalQuestions } = req.body;
   try {
-    const newHistory = new QuizHistory({ userId: req.user.userId, score, totalQuestions });
+    const newHistory = new QuizHistory({
+      userId: req.user.userId,
+      username: req.user.username, 
+      score,
+      totalQuestions,
+      date: new Date(),
+    });
     const savedHistory = await newHistory.save();
     res.status(201).json(savedHistory);
   } catch (error) {
