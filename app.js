@@ -8,7 +8,7 @@ const axios = require("axios");
 
 
 const app = express();
-const port = process.env.PORT || 3400;
+const port = process.env.PORT || 3200;
 
 
 app.use(express.json());
